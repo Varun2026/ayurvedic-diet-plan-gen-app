@@ -1,0 +1,1 @@
+# ayurvedic-diet-plan-gen-app
