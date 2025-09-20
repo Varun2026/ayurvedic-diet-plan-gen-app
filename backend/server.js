@@ -13,7 +13,7 @@ app.use(express.json());
 
 // --- DATABASE CONNECTION ---
 const uri = process.env.ATLAS_URI || 'mongodb://127.0.0.1:27017/ayurvedaDB';
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(uri);
 const connection = mongoose.connection;
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully");
@@ -40,7 +40,7 @@ const appointmentRouter = require('./routes/appointment.route');
 app.use('/api/appointments', appointmentRouter);
 
 const messageRouter = require('./routes/message.route');
-app.use('/api/messages', messageRouter); // This line now appears only once
+app.use('/api/messages', messageRouter);
 
 // A simple test route
 app.get('/', (req, res) => {
