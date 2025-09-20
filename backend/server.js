@@ -70,6 +70,14 @@ app.use('/api/diet-plans', dietPlanRouter);
 
 const appointmentRouter = require('./routes/appointment.route');
 app.use('/api/appointments', appointmentRouter);
+
+const messageRouter = require('./routes/message.route');
+app.use('/api/messages', messageRouter);
+
+const messageRouter = require('./routes/message.route');
+app.use('/api/messages', messageRouter);
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
