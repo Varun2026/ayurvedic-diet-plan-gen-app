@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { generateDietPlan } = require('../controllers/dietPlan.controller');
-const { protect } = require('../middleware/auth.middleware'); // Make sure protect is imported
+const { protect } = require('../middleware/auth.middleware');
 
-// The 'protect' middleware is now added to this route
+// This line MUST include 'protect'
 router.post('/generate', protect, generateDietPlan);
 
 module.exports = router;
