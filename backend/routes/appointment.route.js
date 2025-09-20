@@ -6,5 +6,6 @@ const { protect } = require('../middleware/auth.middleware');
 router.post('/book', bookAppointment);
 router.get('/doctor', protect, getDoctorAppointments);
 router.get('/:id', protect, getAppointmentById); // Add this route
+router.get('/patient', protect, getPatientAppointments);
 
 module.exports = router;
