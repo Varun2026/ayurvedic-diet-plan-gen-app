@@ -2,32 +2,68 @@ const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// ... (The existing createUser and getAllUsers functions are here) ...
-const createUser = async (req, res) => {
-    // ... (no changes to this function)
-};
-const getAllUsers = async (req, res) => {
-    // ... (no changes to this function)
+// Helper function to generate a JWT
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    });
 };
 
+// @desc   Register a new user (patient or doctor)
+// @route  POST /api/users/register
+const registerUser = async (req, res) => {
+  const { fullName, email, password, role, city, licenseNumber, specialties, hospitalLocation } = req.body;
 
-// --- NEW LOGIN FUNCTION ---
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+      role,
+      city: role === 'patient' ? city : undefined,
+      licenseNumber: role === 'doctor' ? licenseNumber : undefined,
+      specialties: role === 'doctor' ? specialties : undefined,
+      hospitalLocation: role === 'doctor' ? hospitalLocation : undefined,
+    });
+
+    const savedUser = await newUser.save();
+
+    res.status(201).json({
+      _id: savedUser._id,
+      fullName: savedUser.fullName,
+      email: savedUser.email,
+      role: savedUser.role,
+      token: generateToken(savedUser._id)
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // @desc   Authenticate a user & get token
 // @route  POST /api/users/login
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Find the user by email
         const user = await User.findOne({ email });
 
-        // If user exists and password matches, send back a token
         if (user && (await bcrypt.compare(password, user.password))) {
             res.json({
                 _id: user._id,
                 fullName: user.fullName,
                 email: user.email,
-                token: generateToken(user._id) // Generate the JWT
+                role: user.role,
+                token: generateToken(user._id)
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
@@ -37,12 +73,4 @@ const loginUser = async (req, res) => {
     }
 };
 
-// Helper function to generate a JWT
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d', // Token will be valid for 30 days
-    });
-};
-
-
-module.exports = { createUser, getAllUsers, loginUser }; // Add loginUser to exports
+module.exports = { registerUser, loginUser };

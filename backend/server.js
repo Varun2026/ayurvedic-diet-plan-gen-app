@@ -48,7 +48,7 @@ connection.once('open', () => {
 
 // A simple test route
 app.get('/', (req, res) => {
-  res.send('Ayurveda Diet App Backend is running!');
+  res.send('Ayurveda Diet App Backend is LIVE!');
 });
 
 // --- API ROUTES ---
@@ -62,6 +62,9 @@ app.use('/api/patients', patientRouter);
 const foodItemRouter = require('./routes/foodItem.route');
 app.use('/api/foods', foodItemRouter);
 
+const doctorRouter = require('./routes/doctor.route');
+app.use('/api/doctors', doctorRouter);
+
 const dietPlanRouter = require('./routes/dietPlan.route');
 app.use('/api/diet-plans', dietPlanRouter);
 
@@ -69,5 +72,3 @@ app.use('/api/diet-plans', dietPlanRouter);
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
-
-"68cb7ee786f3b519281bb97e"
