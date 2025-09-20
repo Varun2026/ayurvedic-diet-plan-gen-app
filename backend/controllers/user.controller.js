@@ -12,7 +12,7 @@ const generateToken = (id) => {
 // @desc   Register a new user (patient or doctor)
 // @route  POST /api/users/register
 const registerUser = async (req, res) => {
-  const { fullName, email, password, role, city, licenseNumber, specialties, hospitalLocation } = req.body;
+  const { fullName, email, password, role, city, address, phone, licenseNumber, specialties, hospitalLocation } = req.body;
 
   try {
     const userExists = await User.findOne({ email });
@@ -29,6 +29,8 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       role,
       city: role === 'patient' ? city : undefined,
+      address: role === 'patient' ? address : undefined,
+      phone: role === 'patient' ? phone : undefined,
       licenseNumber: role === 'doctor' ? licenseNumber : undefined,
       specialties: role === 'doctor' ? specialties : undefined,
       hospitalLocation: role === 'doctor' ? hospitalLocation : undefined,

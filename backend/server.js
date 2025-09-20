@@ -68,6 +68,8 @@ app.use('/api/doctors', doctorRouter);
 const dietPlanRouter = require('./routes/dietPlan.route');
 app.use('/api/diet-plans', dietPlanRouter);
 
+const appointmentRouter = require('./routes/appointment.route');
+app.use('/api/appointments', appointmentRouter);
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
