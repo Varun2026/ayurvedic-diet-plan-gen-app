@@ -1,5 +1,4 @@
 const Appointment = require('../models/appointment.model');
-const Appointment = require('../models/appointment.model');
 
 // @desc   Book a new appointment
 // @route  POST /api/appointments/book
@@ -51,17 +50,19 @@ const getAppointmentById = async (req, res) => {
   }
 };
 
+// @desc   Get appointments for the logged-in patient
+// @route  GET /api/appointments/patient
 const getPatientAppointments = async (req, res) => {
-  try {
-    const appointments = await Appointment.find({ patient: req.user.id })
-      .populate('doctor', 'fullName specialties')
-      .sort({ appointmentDate: -1 });
-
-    res.json(appointments);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
+    try {
+        const appointments = await Appointment.find({ patient: req.user.id })
+            .populate('doctor', 'fullName specialties')
+            .sort({ appointmentDate: -1 });
+            
+        res.json(appointments);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
 };
 
+module.exports = { bookAppointment, getDoctorAppointments, getAppointmentById, getPatientAppointments };
 
-module.exports = { bookAppointment, getDoctorAppointments,getPatientAppointments, getAppointmentById };
