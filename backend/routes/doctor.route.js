@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getDoctors } = require('../controllers/doctor.controller');
+const { getDoctors, getDoctorById } = require('../controllers/doctor.controller');
 
-// This single route will handle all doctor searches
+// GET /api/doctors (for searching)
 router.get('/', getDoctors);
+
+// GET /api/doctors/:id (for a single profile)
+router.get('/:id', getDoctorById);
 
 module.exports = router;

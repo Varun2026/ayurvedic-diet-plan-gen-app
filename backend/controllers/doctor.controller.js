@@ -13,7 +13,7 @@ const getDoctors = async (req, res) => {
     }
     if (req.query.city) {
       // Use a case-insensitive regex for the city search
-      filter.city = new RegExp(`^${req.query.city}$`, 'i');
+      filter.hospitalLocation = new RegExp(`^${req.query.city}$`, 'i');
     }
 
     // Find doctors matching the filter, excluding their passwords
@@ -26,4 +26,20 @@ const getDoctors = async (req, res) => {
   }
 };
 
-module.exports = { getDoctors };
+// @desc   Get a single doctor by ID
+// @route  GET /api/doctors/:id
+const getDoctorById = async (req, res) => {
+  try {
+    const doctor = await User.findById(req.params.id).select('-password');
+    if (doctor && doctor.role === 'doctor') {
+      res.json(doctor);
+    } else {
+      res.status(404).json({ message: 'Doctor not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Make sure both functions are exported
+module.exports = { getDoctors, getDoctorById };
